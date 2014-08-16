@@ -1,9 +1,11 @@
 package gui;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -26,7 +28,7 @@ public class MainFrame extends JFrame {
 	private PersonFileFilter personFilter;
 	private Controller controller;
 	private TablePanel tablePanel;
-	
+
 	public MainFrame() {
 		super("Hello World");
 
@@ -47,7 +49,7 @@ public class MainFrame extends JFrame {
 		formPanel.setFormListener(new FormListener() {
 			public void formEventOccurred(FormEvent e) {
 				controller.addPerson(e);
-				tablePanel.refresh(); 
+				tablePanel.refresh();
 			}
 		});
 
@@ -55,7 +57,7 @@ public class MainFrame extends JFrame {
 		add(toolbar, BorderLayout.NORTH);
 		add(tablePanel, BorderLayout.CENTER);
 
-		setMinimumSize(new Dimension(500,400));
+		setMinimumSize(new Dimension(500, 400));
 		setSize(600, 500);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
@@ -74,60 +76,75 @@ public class MainFrame extends JFrame {
 		fileMenu.add(importDataItem);
 		fileMenu.addSeparator();
 		fileMenu.add(exitItem);
-		
+
 		JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
 		showFormItem.setSelected(true);
-		
+
 		showMenu.add(showFormItem);
 		windowMenu.add(showMenu);
-		
+
 		menuBar.add(fileMenu);
 		menuBar.add(windowMenu);
-		
+
 		showFormItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem)e.getSource();
+				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
 				formPanel.setVisible(menuItem.isSelected());
 			}
 		});
-		
-		//mnemonics + accelerators
+
+		// mnemonics + accelerators
 		fileMenu.setMnemonic(KeyEvent.VK_F);
-		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,ActionEvent.CTRL_MASK));
-		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,ActionEvent.CTRL_MASK));
-		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,ActionEvent.CTRL_MASK));
+		exportDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
+				ActionEvent.CTRL_MASK));
+		importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+				ActionEvent.CTRL_MASK));
+		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				ActionEvent.CTRL_MASK));
 		windowMenu.setMnemonic(KeyEvent.VK_W);
 
 		importDataItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
-					System.out.println("MainFrame");
-					System.out.println("MainFrame|importDataItem");
-					System.out.println("MainFrame|" + fileChooser.getSelectedFile());
-					System.out.println("MainFrame");
-				};
+				if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					try {
+						controller.loadfromFile(fileChooser.getSelectedFile());
+						tablePanel.refresh();
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(MainFrame.this,
+								"Could not load data from file.", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				;
 			}
 		});
+
 		exportDataItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
-					System.out.println("MainFrame");
-					System.out.println("MainFrame|EXportDataItem");
-					System.out.println("MainFrame|" + fileChooser.getSelectedFile());
-					System.out.println("MainFrame");
-				};
+				if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+					try {
+						controller.savetoFile(fileChooser.getSelectedFile());
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(MainFrame.this,
+								"Could not save data to file.", "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				;
 			}
 		});
-		
+
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int action = JOptionPane.showConfirmDialog(MainFrame.this, "Do you really want to exit ?", "Confirm exit...",JOptionPane.OK_CANCEL_OPTION); 
+				int action = JOptionPane.showConfirmDialog(MainFrame.this,
+						"Do you really want to exit ?", "Confirm exit...",
+						JOptionPane.OK_CANCEL_OPTION);
 				if (action == JOptionPane.OK_OPTION) {
 					System.exit(0);
 				}
-			}	
+			}
 		});
-		
+
 		return menuBar;
 	}
 }

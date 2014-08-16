@@ -18,13 +18,15 @@ public class PersonFileFilter extends FileFilter {
 		if (file.isDirectory()) {
 			return true;
 		}
-		String name = file.getName();
-		String extension = Utils.getFileExtension(name);
-		System.out.println(name);
-		if (extension.equals("per")) {
-			return true;
+		else {
+			String name = file.getName();
+			String extension = Utils.getFileExtension(name);
+			System.out.println(name);
+			if (extension.equals(this.getExtension())) {
+				return true;
+			}
+			return false;	
 		}
-		return false;
 	}
 
 	public String getExtension() {

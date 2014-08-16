@@ -4,7 +4,11 @@ import enums.AgeCategory;
 import enums.EmploymentCategory;
 import enums.Gender;
 import gui.FormEvent;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
 import model.Database;
 import model.Person;
 
@@ -28,4 +32,18 @@ public class Controller {
 		Person person = new Person(name, occupation, ageCategory,employmentCategory, taxID, isUSCitizen, gender);
 		db.addPerson(person);
 	}
+	
+	public void savetoFile(File file) throws IOException {
+		try {
+			db.savetoFile(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadfromFile(File file) throws IOException {
+			db.loadfromFile(file);
+	}
+	
 }

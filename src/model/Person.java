@@ -1,11 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 import enums.AgeCategory;
 import enums.EmploymentCategory;
 import enums.Gender;
 
-public class Person {
-	
+public class Person implements Serializable {
+
+	private static final long serialVersionUID = -4664113984338191034L;
+
 	private static int count = 0;
 
 	private int id;
