@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -28,7 +29,9 @@ public class MainFrame extends JFrame {
 	private PersonFileFilter personFilter;
 	private Controller controller;
 	private TablePanel tablePanel;
-
+	private PreferencesDialog preferencesDialog;
+	private Preferences preferences;
+	
 	public MainFrame() {
 		super("Hello World");
 
@@ -39,7 +42,30 @@ public class MainFrame extends JFrame {
 		tablePanel = new TablePanel();
 		controller = new Controller();
 		tablePanel.setData(controller.getPeople());
-		fileChooser = new JFileChooser();
+		preferencesDialog = new PreferencesDialog(this);
+		preferences = Preferences.userRoot().node("db");
+		
+		tablePanel.setPersonTableListener(new PersonTableListener() {
+			public void rowDeleted(int row) {
+				controller.removePerson(row);
+			}
+		});
+		
+		preferencesDialog.setPreferencesListener(new PreferencesListener(){
+			public void PreferencesListener(String user, String password,
+					int port) {
+				preferences.put("UserName", user);
+				preferences.put("Password", password);
+				preferences.putInt("Port", port);
+			}
+		});
+
+		String user = preferences.get("UserName", "");
+		String password = preferences.get("Password", "");
+		Integer port = preferences.getInt("Port", 3306);
+		preferencesDialog.setDefaults(user, password, port);
+
+		fileChooser = new JFileChooser("E:\\Downloads\\JAVA_SWING_DATA_FILES");
 		personFilter = new PersonFileFilter();
 		fileChooser.addChoosableFileFilter(personFilter);
 		fileChooser.setFileFilter(personFilter);
@@ -68,6 +94,7 @@ public class MainFrame extends JFrame {
 		JMenu windowMenu = new JMenu("Window");
 		JMenu showMenu = new JMenu("Show");
 		JMenu fileMenu = new JMenu("File");
+		JMenuItem prefsItem = new JMenuItem("Preferences...");
 		JMenuItem exportDataItem = new JMenuItem("Export Data...");
 		JMenuItem importDataItem = new JMenuItem("Import Data...");
 		JMenuItem exitItem = new JMenuItem("Exit");
@@ -82,10 +109,16 @@ public class MainFrame extends JFrame {
 
 		showMenu.add(showFormItem);
 		windowMenu.add(showMenu);
+		windowMenu.add(prefsItem);
 
 		menuBar.add(fileMenu);
 		menuBar.add(windowMenu);
-
+		prefsItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				preferencesDialog.setVisible(true);
+			}
+		});
+		
 		showFormItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) e.getSource();
@@ -102,6 +135,8 @@ public class MainFrame extends JFrame {
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				ActionEvent.CTRL_MASK));
 		windowMenu.setMnemonic(KeyEvent.VK_W);
+		prefsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,
+				ActionEvent.CTRL_MASK));
 
 		importDataItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -68,7 +68,7 @@ public class FormPanel extends JPanel {
 		nameLabel.setLabelFor(nameField);
 		occupationLabel.setDisplayedMnemonic(KeyEvent.VK_C);
 		occupationLabel.setLabelFor(occupationField);
-
+				
 		// Set up gender radios
 		maleRadio.setActionCommand("Male");
 		femaleRadio.setActionCommand("Female");
@@ -143,6 +143,16 @@ public class FormPanel extends JPanel {
 				if (formListener != null) {
 					formListener.formEventOccurred(ev);
 				}
+				
+				nameField.setText("");
+				occupationField.setText("");
+				empCombo.setSelectedIndex(0);
+				ageList.setSelectedIndex(1);
+				citizenCheck.setSelected(false);
+				taxField.setText("");
+				maleRadio.setSelected(true);
+				nameField.requestFocus();
+				
 			}
 		});
 
@@ -151,6 +161,7 @@ public class FormPanel extends JPanel {
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
 		layoutComponents();
+		
 	}
 
 	public void layoutComponents() {

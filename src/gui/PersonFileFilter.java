@@ -6,26 +6,25 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class PersonFileFilter extends FileFilter {
-	
+
 	private FileNameExtensionFilter perFilter;
-	
-	public PersonFileFilter(){
-		setPerFilter(new FileNameExtensionFilter(getDescription(), getExtension()));
+
+	public PersonFileFilter() {
+		setPerFilter(new FileNameExtensionFilter(getDescription(),
+				getExtension()));
 	}
 
 	public boolean accept(File file) {
 
 		if (file.isDirectory()) {
 			return true;
-		}
-		else {
+		} else {
 			String name = file.getName();
 			String extension = Utils.getFileExtension(name);
-			System.out.println(name);
 			if (extension.equals(this.getExtension())) {
 				return true;
 			}
-			return false;	
+			return false;
 		}
 	}
 
@@ -44,6 +43,5 @@ public class PersonFileFilter extends FileFilter {
 	public void setPerFilter(FileNameExtensionFilter perFilter) {
 		this.perFilter = perFilter;
 	}
-
 
 }

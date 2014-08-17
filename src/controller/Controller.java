@@ -33,6 +33,10 @@ public class Controller {
 		db.addPerson(person);
 	}
 	
+	public void removePerson(int index) {
+		db.removePerson(index);
+	}
+	
 	public void savetoFile(File file) throws IOException {
 		try {
 			db.savetoFile(file);

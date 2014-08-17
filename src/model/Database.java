@@ -7,24 +7,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Database {
 
-	private ArrayList<Person> people;
+	private List<Person> people;
 	
 	public Database() {
-		people = new ArrayList<Person>();	
+		people = new LinkedList<Person>();	
 	}
 	
 	public void addPerson(Person person){
 		people.add(person);
 	}
 	
+	public void removePerson(int index) {
+		people.remove(index);
+	}
+	
 	public List<Person> getPeople(){
-		return people;
+		return Collections.unmodifiableList(people);
 	}
 	
 	public void savetoFile(File file) throws IOException {
