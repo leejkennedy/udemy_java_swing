@@ -53,7 +53,7 @@ public class PreferencesDialog extends JDialog {
 						.getPassword();
 
 				if (preferencesListener != null) {
-					preferencesListener.PreferencesListener(user, new String(
+					preferencesListener.PreferencesSet(user, new String(
 							password), port);
 				}
 

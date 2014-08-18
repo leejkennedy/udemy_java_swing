@@ -52,7 +52,7 @@ public class MainFrame extends JFrame {
 		});
 		
 		preferencesDialog.setPreferencesListener(new PreferencesListener(){
-			public void PreferencesListener(String user, String password,
+			public void PreferencesSet(String user, String password,
 					int port) {
 				preferences.put("UserName", user);
 				preferences.put("Password", password);

@@ -1,6 +1,5 @@
 package model;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,13 +10,63 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.sql.*;
 
 public class Database {
 
 	private List<Person> people;
+	private Connection con;
 	
 	public Database() {
 		people = new LinkedList<Person>();	
+	}
+	
+	public void connect() throws Exception {
+		
+		if (con != null) return;			
+	
+		String user = "root";
+		String password = "k085711233";
+		String url = "jdbc://mysql://localhost:3306/javaswing";
+	
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			throw new Exception("Driver not found");
+		}
+		con = DriverManager.getConnection(url, user, password);
+		
+		System.out.println("Connection established.");
+	}
+	
+	public void disconnect() {
+		if (con != null){
+			try {
+				con.close();
+			} catch (SQLException e) {
+				System.out.println("Can't close connection");
+			}
+		}
+	}
+	
+	public void save() throws SQLException {
+		String checkSql = "SELECT Count(*) AS COUNT FROM T_PERSONS WHERE ID=?";
+		
+		PreparedStatement checkStatement = con.prepareStatement(checkSql);
+		
+		for (Person person: people) {
+			int id = person.getId();
+			
+			checkStatement.setInt(1, id);
+			ResultSet checkResult = checkStatement.executeQuery(checkSql);
+
+			checkResult.next();
+			
+			int count = checkResult.getInt(1);
+			
+			System.out.println("Count for person with id " + id + " is " + count);
+			
+		}
 	}
 	
 	public void addPerson(Person person){
